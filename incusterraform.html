@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Comparación: Terraform + Incus vs OpenStack y CNCF (Kubernetes)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; 
+      line-height:1.5; 
+      padding:20px; 
+      color:#111; 
+      background:#fff; 
+      max-width:900px;
+      margin:auto;
+    }
+    h1, h2 { color:#111; }
+    table { 
+      border-collapse: collapse; 
+      width:100%; 
+      margin-bottom:20px; 
+      border:1px solid #333;
+    }
+    th, td { 
+      border:1px solid #333; 
+      padding:8px; 
+      text-align:left; 
+      vertical-align:top; 
+    }
+    th { background:#f0f0f0; }
+    .section { margin-bottom:20px; }
+  </style>
+</head>
+<body>
+  <h1>Comparación: Terraform + Incus vs OpenStack y CNCF (Kubernetes)</h1>
+
+  <h2>Comparación General</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Aspecto</th>
+        <th>Terraform + Incus</th>
+        <th>OpenStack</th>
+        <th>CNCF / Kubernetes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Complejidad de despliegue</td>
+        <td>Instalación relativamente sencilla: Incus funciona como un demonio en cada nodo, clustering nativo. Terraform se conecta vía provider para manejar VMs y contenedores declarativamente.</td>
+        <td>Muy complejo: decenas de servicios (Nova, Neutron, Keystone, etc.) deben configurarse. Alta curva de aprendizaje.</td>
+        <td>Complejo: múltiples componentes (API server, etcd, kubelet, CNI, CSI…). Requiere experiencia especializada.</td>
+      </tr>
+      <tr>
+        <td>Gestión de recursos</td>
+        <td>VMs y contenedores de sistema gestionados de forma unificada. Terraform permite IaC con control de versiones.</td>
+        <td>Amplio catálogo (VMs, redes, almacenamiento, identidad), cada recurso con su API propia.</td>
+        <td>Enfocado en orquestación de contenedores de aplicación. No maneja VMs nativamente (requiere KubeVirt).</td>
+      </tr>
+      <tr>
+        <td>Infraestructura necesaria</td>
+        <td>Ligera: funciona en hardware estándar, menos overhead en nodos de control.</td>
+        <td>Pesada: necesita varios nodos dedicados para servicios de control, incluso antes de ejecutar cargas.</td>
+        <td>Moderada: control plane requiere varios nodos, sidecars y servicios adicionales consumen recursos.</td>
+      </tr>
+      <tr>
+        <td>Escalabilidad</td>
+        <td>Adecuado para clusters medianos (decenas/centenas de nodos).</td>
+        <td>Escala a cientos o miles de nodos, usado por grandes proveedores de nube.</td>
+        <td>Altamente escalable, pensado para miles de microservicios distribuidos globalmente.</td>
+      </tr>
+      <tr>
+        <td>Ecosistema y extensibilidad</td>
+        <td>Terraform tiene ecosistema enorme de providers, facilita integración con infra externa/multi-nube.</td>
+        <td>Ecosistema grande pero autocontenido, más difícil de integrar con servicios externos no-OpenStack.</td>
+        <td>Ecosistema CNCF masivo (observabilidad, redes, service mesh, CI/CD, seguridad).</td>
+      </tr>
+      <tr>
+        <td>Operación y mantenimiento</td>
+        <td>Menos componentes = menos puntos de fallo. Entrenamiento más fácil para admins Linux.</td>
+        <td>Complejo: requiere bases de datos distribuidas, mensajería, monitoreo avanzado, equipo especializado.</td>
+        <td>Complejo: monitoreo, escalado y seguridad requieren stack adicional (Prometheus, Istio, etc.).</td>
+      </tr>
+      <tr>
+        <td>Curva de aprendizaje</td>
+        <td>Terraform: HCL declarativo fácil de aprender. Incus: CLI intuitiva tipo LXD.</td>
+        <td>Muy pronunciada: cada servicio de OpenStack tiene su propia lógica.</td>
+        <td>Pronunciada: YAML, networking complejo, arquitectura distribuida.</td>
+      </tr>
+      <tr>
+        <td>Casos de uso ideales</td>
+        <td>Nube privada ligera, reemplazo de VMs, integración flexible con infra híbrida.</td>
+        <td>Nube privada tipo IaaS pública (AWS-like), telecomunicaciones, universidades, gobiernos.</td>
+        <td>Aplicaciones cloud-native distribuidas, autoescalado masivo, microservicios en producción.</td>
+      </tr>
+      <tr>
+        <td>Costo de operación</td>
+        <td>Bajo/medio: software libre, menos hardware de control y menos personal especializado.</td>
+        <td>Alto: hardware dedicado y equipo altamente especializado.</td>
+        <td>Alto/medio: software libre pero operación compleja, requiere equipo experto.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section">
+    <h2>Resultados: Terraform + Incus vs OpenStack y CNCF</h2>
+    <p>Tras analizar las diferencias podemos tomar en cuenta la decisión de escoger Terraform con Incus para este tipo de proyecto.</p>
+    <ul>
+      <li>Menor complejidad operativa: no requiere decenas de servicios distribuidos.</li>
+      <li>Gestión unificada de VMs y contenedores de sistema en una misma API/CLI.</li>
+      <li>Infraestructura como Código (IaC) con Terraform: reproducible, auditable, versionada.</li>
+      <li>Costos operativos más bajos: menos hardware y personal especializado.</li>
+      <li>Integración flexible con ecosistemas externos y multi-nube mediante providers de Terraform.</li>
+      <li>Ideal para organizaciones medianas que buscan nube privada ligera, sin necesidad de la escala masiva de OpenStack/Kubernetes.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Resumen</h2>
+    <p>Terraform + Incus ofrece una nube privada más ligera, flexible y de menor complejidad operativa, aprovechando la Infraestructura como Código y reduciendo costos. OpenStack es más adecuado para despliegues a gran escala que requieren un catálogo completo de servicios, pero implica altos costos y complejidad. El ecosistema CNCF/Kubernetes es óptimo para microservicios y aplicaciones distribuidas a gran escala, pero introduce un alto grado de complejidad operativa. Para organizaciones medianas que buscan control, eficiencia y simplicidad, Terraform + Incus es la opción más balanceada.</p>
+  </div>
+</body>
+</html>
